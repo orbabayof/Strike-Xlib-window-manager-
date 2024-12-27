@@ -1,44 +1,34 @@
 #include "display/display.hpp"
 #include "window/window.hpp"
-
+#include "handler/handler.hpp"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
 
-#include <iostream>
 
-void event_dispatch()
-{
-    auto Xdisplay { strike::display::get().dpy() };
-    XEvent ev;
-    while(!XNextEvent(Xdisplay, &ev))
-    {
-        switch (ev.type) 
-        {
-            case ButtonPress:
-                return;
-        }
-    }
-}
+#include <iostream>
 
 int main()
 {
+
+    std::cout << "couting to check\n";
+    XEvent ev;
     auto Xdisplay { strike::display::get().dpy() };
+    auto scrn { DefaultScreen(Xdisplay) };
 
-    auto screen { DefaultScreen(Xdisplay) };
-    strike::window root { XRootWindow(Xdisplay, screen) };
+    //actually start the window manager
+    XSelectInput(Xdisplay, RootWindow(Xdisplay, scrn), SubstructureRedirectMask);
+    XSync(Xdisplay, scrn);
 
-    strike::window square { strike::window::create_window(0, 0, 500, 500)};
+    while(true)
+    {
+        while(!XNextEvent(Xdisplay, &ev))
+        {
 
+            std::cout << "got request! " << ev.type << '\n' ;
 
-    square.map();
-
-    event_dispatch();
-    
-
-    square.unMap();
-
-    return 0; 
-
-
+            if(strike::handler[ev.type])
+                strike::handler[ev.type](ev);
+        }
+    } 
 }

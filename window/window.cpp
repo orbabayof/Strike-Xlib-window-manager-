@@ -25,11 +25,13 @@ static strike::window create_window(int x, int y, unsigned int width,
   auto display{ strike::display::get().dpy()};
   int scr{XDefaultScreen(display)};
   XSetWindowAttributes wa;
-  wa.background_pixel = BlackPixel(display, scr);
+  wa.background_pixel = WhitePixel(display, scr);
+  wa.backing_pixel = WhitePixel(display, scr);
   wa.event_mask = ButtonPressMask;
+  wa.border_pixel = WhitePixel(display, scr);
 
   return {XCreateWindow(display, XRootWindow(display, scr), x, y, width, hight,
                        0, XDefaultDepth(display, scr), InputOutput,
                        XDefaultVisual(display, scr),
-                       CWBackingPixel | CWEventMask, &wa), strike::deleteOnDest};
+                       CWBackingPixel | CWEventMask | CWBorderPixel , &wa), strike::deleteOnDest};
 }

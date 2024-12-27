@@ -6,6 +6,12 @@
 
 namespace strike 
 {
+
+	namespace event_dispatch
+    {
+		void mapRequest(XEvent& e);
+    }
+
     constexpr std::array<void(*)(XEvent&), LASTEvent> initHandler()
     {
         std::array<void(*)(XEvent&), LASTEvent> handler {};
@@ -20,7 +26,7 @@ namespace strike
 	    handler[FocusIn         ]  = nullptr;
 	    handler[KeyPress        ]  = nullptr;
 	    handler[MappingNotify   ]  = nullptr;
-	    handler[MapRequest      ]  = nullptr;
+	    handler[MapRequest      ]  = event_dispatch::mapRequest;
 	    handler[MotionNotify    ]  = nullptr;
 	    handler[PropertyNotify  ]  = nullptr;
 	    handler[UnmapNotify     ]  = nullptr;
@@ -29,10 +35,5 @@ namespace strike
     }
 
     constexpr std::array<void(*)(XEvent&), LASTEvent> handler { initHandler() };
-
-    namespace event_dispatch
-    {
-
-    }
 
 }

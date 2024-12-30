@@ -1,26 +1,46 @@
+BINARY=wm
+CODEDIRS=. event_dispatcher frame_manager raii_wrapper settings util window_manager
+INCDIRS=. ./include/ # can be list
 
-flags= -lX11 -std=c++23
+CC=g++
+OPT=-O0
+# generate files that encode make rules for the .h dependencies
+DEPFLAGS=-MP -MD
+# automatically add the -I onto each include directory
+CFLAGS=-std=c++23 -lX11 $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)
 
-all: wm
+# for-style iteration (foreach) and regular expression completions (wildcard)
+CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.cpp))
+# regular expression replacement
+OBJECTS=$(patsubst %.cpp,%.o,$(CFILES))
+DEPFILES=$(patsubst %.cpp,%.d,$(CFILES))
 
-wm: main.o util.o event_dispatcher.o window_manager.o frame_manager.o
-	g++ $(flags) main.o util.o event_dispatcher.o window_manager.o frame_manager.o -o wm
+all: $(BINARY)
 
-main.o: main.cpp 
-	g++ -c $(flags) main.cpp
+$(BINARY): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
 
-util.o: util/util.cpp
-	g++ -c $(flags) util/util.cpp
-
-event_dispatcher.o: event_dispatcher/event_dispatcher.cpp
-	g++ -c $(flags) event_dispatcher/event_dispatcher.cpp
-
-frame_manager.o: frame_manager/frame_manager.cpp
-	g++ -c $(flags) frame_manager/frame_manager.cpp
-
-window_manager.o: window_manager/window_manager.cpp
-	g++ -c $(flags) window_manager/window_manager.cpp
-
+# only want the .c file dependency here, thus $< instead of $^.
+#
+%.o:%.cpp
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm *.o
+	rm -rf $(BINARY) $(OBJECTS) $(DEPFILES)
+
+# shell commands are a set of keystrokes away
+distribute: clean
+	tar zcvf dist.tgz *
+
+# @ silences the printing of the command
+# $(info ...) prints output
+diff:
+	$(info The status of the repository, and the volume of per-file changes:)
+	@git status
+	@git diff --stat
+
+# include the dependencies
+-include $(DEPFILES)
+
+# add .PHONY so that the non-targetfile - rules work even if a file with the same name exists.
+.PHONY: all clean distribute diff

@@ -2,6 +2,8 @@
 
 #include "../settings/settings.h"
 #include "../util/util.h"
+#include "../window_manager/window_manager.h"
+#include "../frame_manager/frame_manager.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -12,6 +14,7 @@ void frame(Window w)
 	XWindowAttributes wa;
 	XGetWindowAttributes(dpy(), w, &wa);
 
+  //triggers CreateNotify
 	const Window frame{XCreateSimpleWindow(dpy(), g_root, wa.x, wa.y, wa.width, wa.height, settings::border_width,
 										   settings::border_color, settings::bg_color)};
 
@@ -21,9 +24,14 @@ void frame(Window w)
   // for crashes and cleanup
 	XAddToSaveSet(dpy(), w);
 
+  // offset within the frame, triggers ReperentNotify
   XReparentWindow(dpy(), w, frame, 0, 0);
-  
 
+  XMapWindow(dpy(), frame);
+  
+  wm().storeFrameAndChild(frame, w);
+
+  //TODO grub key events
 }
 
 namespace event
@@ -47,6 +55,8 @@ void configureRequest(XEvent &ev)
 void mapRequest(XEvent &ev)
 {
 	XMapRequestEvent e{ev.xmaprequest};
+
+  frame(e.window);
 
 	// creates map notify
 	XMapWindow(dpy(), e.window);

@@ -1,21 +1,22 @@
-flags = -lX11
 
-all: strikeWm
+flags= -lX11 -std=c++23
 
-strikeWm: main.o window.o display.o handler.o
-	g++ $(flags) main.o window.o display.o handler.o -o strikeWm
+all: wm
 
-main.o: main.cpp
+wm: main.o util.o event_dispatcher.o window_manager.o
+	g++ $(flags) main.o util.o event_dispatcher.o window_manager.o -o wm
+
+main.o: main.cpp 
 	g++ -c $(flags) main.cpp
 
-window.o: window/window.cpp
-	g++ -c $(flags) window/window.cpp
+util.o: util/util.cpp
+	g++ -c $(flags) util/util.cpp
 
-display.o: display/display.cpp
-	g++ -c $(flags) display/display.cpp
+event_dispatcher.o: event_dispatcher/event_dispatcher.cpp
+	g++ -c $(flags) event_dispatcher/event_dispatcher.cpp
 
-handler.o: handler/handler.cpp
-	g++ -c $(flags) handler/handler.cpp
+window_manager.o: window_manager/window_manager.cpp
+	g++ -c $(flags) window_manager/window_manager.cpp
 
 clean:
-	rm *.o 
+	rm *.o

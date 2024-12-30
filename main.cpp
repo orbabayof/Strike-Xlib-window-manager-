@@ -1,34 +1,31 @@
-#include "display/display.hpp"
-#include "window/window.hpp"
-#include "handler/handler.hpp"
+#include "event_dispatcher/event_dispatcher.h"
+#include "util/util.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
-
-
 #include <iostream>
 
-int main()
+int main(int argc, char *argv[])
 {
+	std::cout << "we're testinggggg\n";
+	if (!dpy())
+		std::cerr << "can't connnect with the X server! \n";
 
-    std::cout << "couting to check\n";
-    XEvent ev;
-    auto Xdisplay { strike::display::get().dpy() };
-    auto scrn { DefaultScreen(Xdisplay) };
+	// might want to add more redirect masks
+	listenWindowEvents(g_root);
 
-    //actually start the window manager
-    XSelectInput(Xdisplay, RootWindow(Xdisplay, scrn), SubstructureRedirectMask);
-    XSync(Xdisplay, scrn);
+	/*event loop */
+	while (true)
+	{
+		XEvent ev;
 
-    while(true)
-    {
-        while(!XNextEvent(Xdisplay, &ev))
-        {
+		while (!XNextEvent(dpy(), &ev))
+		{
+			std::cout << "got event: " << ev.type << '\n';
+			if (event_hand[ev.type])
+				event_hand[ev.type](ev);
+		}
+	}
 
-            std::cout << "got request! " << ev.type << '\n' ;
-
-            if(strike::handler[ev.type])
-                strike::handler[ev.type](ev);
-        }
-    } 
+	return 0;
 }

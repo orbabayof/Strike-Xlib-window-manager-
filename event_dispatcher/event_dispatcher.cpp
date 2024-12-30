@@ -41,7 +41,7 @@ void unframe(Window framedWindow)
     XUnmapWindow(dpy(), frame);
 
     //offset window back to the root 
-    XReparentWindow(dpy(), framedWindow, g_root, 0, 0);
+    XReparentWindow(dpy(), framedWindow, DefaultRootWindow(dpy()), 0, 0);
 
     XRemoveFromSaveSet(dpy(), framedWindow);
 
@@ -87,15 +87,19 @@ void mapRequest(XEvent &ev)
 
 void unMapNotify(XEvent& ev)
 {
+  std::cerr << "got unMap notify\n";
   XUnmapEvent e { ev.xunmap };
 
   //reverse mapRequest
   if(wm().wasFramedByWM(e.window))
   {
+
     std::cerr << "widnow was framed \n";
     unframe(e.window);
+
   }
 }
+
 
 } // namespace event
 

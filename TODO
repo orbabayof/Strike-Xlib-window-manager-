@@ -1,7 +1,13 @@
+features:
+
 * grub key events on reperanted windows
   * key class
 
 * Color class
 * Precentage class 
 
- 
+
+corner cases (will be implemented in an advanced state of the wm):
+
+* wm doesn't handle windows created before we run the wm
+

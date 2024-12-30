@@ -15,6 +15,10 @@ public:
 
   bool wasFramedByWM(Window w);
 
+  //returns root window if w isn't framed
+  Window getFrame(Window w);
+
+  void removeFrameAndChildFromStorage(Window reframedWindow);
 
 protected:
 

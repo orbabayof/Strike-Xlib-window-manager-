@@ -17,9 +17,11 @@ int main(int argc, char *argv[])
   }
 
   
-  XSetErrorHandler(errorHundler);
+  XSetErrorHandler(errorHandler);
 	// might want to add more redirect masks
 	listenWindowEvents(g_root);
+
+  XSync(dpy(), false);
 
 
 	/*event loop */

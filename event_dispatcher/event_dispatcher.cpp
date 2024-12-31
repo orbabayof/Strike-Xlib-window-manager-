@@ -24,6 +24,9 @@ void frame(Window w)
   // for crashes and cleanup
 	XAddToSaveSet(dpy(), w);
 
+
+  XSync(dpy(), false);
+
   // offset within the frame, triggers ReperentNotify
   XReparentWindow(dpy(), w, frame, 0, 0);
 

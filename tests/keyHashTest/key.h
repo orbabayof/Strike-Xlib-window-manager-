@@ -2,21 +2,15 @@
 
 #pragma once
 
-#include <X11/Xlib.h>
 #include <functional>
 
-#include <X11/X.h>
 #include <boost/functional/hash_fwd.hpp>
-#include <string_view>
+#include <X11/X.h>
 
 class key
 {
   public:
 	constexpr key(KeySym keycode, int modifiers) : m_keycode{keycode}, m_modifiers{modifiers}
-	{
-	}
-
-	constexpr key(std::string_view keyName, int modifiers) : key(XStringToKeysym(keyName.data()), modifiers)
 	{
 	}
 
@@ -48,11 +42,11 @@ template <> class hash<key>
   public:
 	size_t operator()(const key &k) const
 	{
-		size_t seed{};
-		boost::hash_combine(seed, k.m_keycode);
-		boost::hash_combine(seed, k.m_modifiers);
+    size_t seed {};
+    boost::hash_combine(seed, k.m_keycode);
+    boost::hash_combine(seed, k.m_modifiers);
 
-		return seed;
+    return seed;
 	}
 };
 

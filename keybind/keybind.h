@@ -3,20 +3,29 @@
 #include <key.h>
 
 #include <functional>
+#include <unordered_set>
 
 class keybind : public key {
 public:
    
-   constexpr keybind( int keycode, int modifiers, std::function<void()> action)
+   constexpr keybind( unsigned long keycode, int modifiers, std::function<void()> action)
    :key(keycode, modifiers)
    ,m_action { action }
-   {}
+   {
+      m_all.emplace(*this); 
+   }
 
 
    void constexpr execBindedActionIfExists() override { m_action(); }
 
-  ~keybind() override = default;
+  //avoid dangaling references
+  ~keybind() override
+  {
+    m_all.erase(*this);
+  }
 
 private:
+
   std::function<void()> m_action {};
+  static std::unordered_set<std::reference_wrapper<key>> m_all;
 };

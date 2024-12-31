@@ -1,8 +1,6 @@
 #ifndef RAII_WRAPPER_H
 #define RAII_WRAPPER_H
 
-#include <functional>
-
 //wrappes an object with a destractor
 template<typename T, typename U>
 class raii_wrapper

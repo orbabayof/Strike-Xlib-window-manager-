@@ -1,6 +1,6 @@
 BINARY=wm
-CODEDIRS=. event_dispatcher frame_manager raii_wrapper settings util window_manager error_handle
-INCDIRS=. ./include/ # can be list
+CODEDIRS=. event_dispatcher frame_manager raii_wrapper settings util window_manager error_handle keybind
+INCDIRS=. .$(CODEDIRS) # can be list
 
 CC=g++
 OPT=-O0

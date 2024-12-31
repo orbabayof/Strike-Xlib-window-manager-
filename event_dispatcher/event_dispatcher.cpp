@@ -1,8 +1,8 @@
 #include "event_dispatcher.h"
 
-#include "../settings/settings.h"
-#include "../util/util.h"
-#include "../window_manager/window_manager.h"
+#include <settings.h>
+#include <util.h>
+#include <window_manager.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>

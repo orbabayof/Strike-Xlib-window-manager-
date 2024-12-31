@@ -1,4 +1,4 @@
-#include "error_hundle.h"
+#include <error_hundle.h>
 
 //does nothing for now
 int errorHandler(Display* dpy, XErrorEvent* e)

@@ -1,6 +1,6 @@
-#include "util.h"
+#include <util.h>
 
-#include "../raii_wrapper/raii_wrapper.h"
+#include <raii_wrapper.h>
 
 #include <X11/Xlib.h>
 #include <functional>

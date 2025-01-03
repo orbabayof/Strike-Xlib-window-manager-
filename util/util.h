@@ -6,3 +6,5 @@ extern const Window g_root;
 
 //listens on substructure and notify 
 int listenWindowEvents(Window w);
+
+void grabKeybinds(Window w);

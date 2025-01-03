@@ -20,6 +20,7 @@ void frame(Window w)
 
 	// frame is not a direct child of root at this point
 	listenWindowEvents(frame);
+  grabKeybinds(frame);
 
   // for crashes and cleanup
 	XAddToSaveSet(dpy(), w);

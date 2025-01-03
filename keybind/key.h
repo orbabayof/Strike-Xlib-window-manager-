@@ -23,9 +23,12 @@ class key
 	constexpr virtual ~key() = default;
 
 	// a workaround over dynamic_cast for the keybind class
-	void constexpr virtual execBindedActionIfExists()
+	void constexpr virtual execBindedActionIfExists() const 
 	{
 	}
+
+  constexpr KeySym keycode() const { return m_keycode; }
+  constexpr int modifiers() const { return m_modifiers; }
 
 	friend class std::hash<key>;
 

@@ -9,11 +9,11 @@ int main(int argc, char *argv[])
     std::cout << "Hello!";
 	}};
 
-  keybind kb {2,2, printHello };
+  keybind<wm> kb {2,2, printHello };
 
   key samek {2,2};
 
-  keybind::runBindedFuncIfExists(samek);
+  keybind<bar>::runBindedFuncIfExists(samek);
 
 	return 0;
 }

@@ -6,6 +6,7 @@ features:
 * Color class
 * Precentage class 
 
+* key class working with diffrent sets of keys
 
 corner cases (will be implemented in an advanced state of the wm):
 

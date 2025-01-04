@@ -7,9 +7,19 @@
 #include <functional>
 #include <unordered_set>
 
+enum window_t
+{
+  wm,
+  bar,
+
+  max_types
+};
+
+template<window_t N>
 class keybind : public key
 {
   public:
+
 	constexpr keybind(unsigned long keycode, int modifiers, std::function<void()> action)
 		: key(keycode, modifiers), m_action{action}
 	{
@@ -34,6 +44,7 @@ class keybind : public key
 	{
 		return m_all;
 	}
+
 
 	// avoid dangaling references
 	~keybind() override

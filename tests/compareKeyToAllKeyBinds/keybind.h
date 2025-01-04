@@ -7,6 +7,15 @@
 #include <functional>
 #include <unordered_set>
 
+enum windowType
+{
+  wm,
+  bar,
+
+  max_types,
+};
+
+template <windowType N>
 class keybind : public key {
 public:
    

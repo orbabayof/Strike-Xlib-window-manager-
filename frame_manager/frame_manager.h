@@ -3,8 +3,6 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <unordered_map>
-#include <unordered_set>
-#include <utility>
 
 
 class frame_manager

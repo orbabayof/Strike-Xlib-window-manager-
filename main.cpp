@@ -1,5 +1,6 @@
 #include "event_dispatcher/event_dispatcher.h"
 #include "error_handle/error_hundle.h"
+#include "settings.h"
 #include "util/util.h"
 
 #include <X11/X.h>
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
 
   XSync(dpy(), false);
 
+  settings::initKeyBinds();
 
 	/*event loop */
 	while (true)

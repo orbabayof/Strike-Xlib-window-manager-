@@ -2,8 +2,10 @@
 
 #pragma once
 
+
 #include <X11/Xlib.h>
 #include <functional>
+#include <util.h>
 
 #include <X11/X.h>
 #include <boost/container_hash/hash.hpp>
@@ -12,18 +14,18 @@
 class key
 {
   public:
-	constexpr key(KeySym keycode, int modifiers) : m_keycode{keycode}, m_modifiers{modifiers}
+	constexpr key(KeyCode keycode, int modifiers) : m_keycode{keycode}, m_modifiers{modifiers}
 	{
 	}
 
-	constexpr key(std::string_view keyName, int modifiers) : key(XStringToKeysym(keyName.data()), modifiers)
+	constexpr key(std::string_view keyName, int modifiers) : key(XKeysymToKeycode(dpy(), XStringToKeysym(keyName.data())), modifiers)
 	{
 	}
 
 	constexpr virtual ~key() = default;
 
 
-  constexpr KeySym keycode() const { return m_keycode; }
+  constexpr auto keycode() const { return m_keycode; }
   constexpr int modifiers() const { return m_modifiers; }
 
 	friend class std::hash<key>;
@@ -34,7 +36,7 @@ class key
 	}
 
   private:
-	KeySym m_keycode;
+	KeyCode m_keycode;
 	int m_modifiers;
 
 

@@ -1,4 +1,6 @@
 #include "event_dispatcher.h"
+#include "keybind.h"
+#include <keybindUtil.h>
 
 #include <settings.h>
 #include <util.h>
@@ -20,7 +22,9 @@ void frame(Window w)
 
 	// frame is not a direct child of root at this point
 	listenWindowEvents(frame);
-  grabKeybinds(frame);
+
+  std::cout << "got to the place of the grab" << '\n';
+  grabKeybinds<window_t::wm>(frame);
 
   // for crashes and cleanup
 	XAddToSaveSet(dpy(), w);

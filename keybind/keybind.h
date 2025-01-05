@@ -5,9 +5,10 @@
 #include "key.h"
 
 #include <functional>
+#include <string_view>
 #include <unordered_set>
 
-enum window_t
+enum class window_t
 {
   wm,
   bar,
@@ -20,8 +21,8 @@ class keybind : public key
 {
   public:
 
-	constexpr keybind(unsigned long keycode, int modifiers, std::function<void()> action)
-		: key(keycode, modifiers), m_action{action}
+	constexpr keybind(std::string_view keyName, int modifiers, std::function<void()> action)
+		: key(keyName, modifiers), m_action{action}
 	{
 		m_all.emplace(*this);
 	}

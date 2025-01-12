@@ -1,3 +1,4 @@
+#include <X11/X.h>
 #include <util.h>
 #include <keybind.h>
 
@@ -12,7 +13,8 @@ void grabKeybinds(Window w)
     [w](const key& k)
       {
         std::cout << "grabbed " << k.keycode() << '\n';
-        XGrabKey(dpy(), k.keycode(), k.modifiers(), w, true, GrabModeAsync, GrabModeAsync);
+        std::cout << k.modifiers() << '\n';
+        XGrabKey(dpy(), k.keycode(), k.modifiers(), w, false, GrabModeAsync, GrabModeAsync);
       }
   };
 

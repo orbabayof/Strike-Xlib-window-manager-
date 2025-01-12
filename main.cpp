@@ -1,7 +1,9 @@
 #include "event_dispatcher/event_dispatcher.h"
 #include "error_handle/error_hundle.h"
+#include "keybind.h"
 #include "settings.h"
 #include "util/util.h"
+#include <keybindUtil.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -25,6 +27,8 @@ int main(int argc, char *argv[])
   XSync(dpy(), false);
 
   settings::initKeyBinds();
+  
+  grabKeybinds<window_t::wm>(g_root);
 
 	/*event loop */
 	while (true)

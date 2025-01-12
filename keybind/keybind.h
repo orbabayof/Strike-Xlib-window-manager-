@@ -21,7 +21,7 @@ class keybind : public key
 {
   public:
 
-	constexpr keybind(std::string_view keyName, int modifiers, std::function<void()> action)
+	constexpr keybind(std::string_view keyName, unsigned int modifiers, std::function<void()> action)
 		: key(keyName, modifiers), m_action{action}
 	{
 		m_all.emplace(*this);

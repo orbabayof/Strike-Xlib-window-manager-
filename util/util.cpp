@@ -18,6 +18,6 @@ extern const Window g_root{XDefaultRootWindow(dpy())};
 
 int listenWindowEvents(Window w)
 {
-  return XSelectInput(dpy(), w, SubstructureRedirectMask | SubstructureNotifyMask);
+  return XSelectInput(dpy(), w, SubstructureRedirectMask | SubstructureNotifyMask );
 }
 

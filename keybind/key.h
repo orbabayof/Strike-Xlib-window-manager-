@@ -14,11 +14,10 @@
 class key
 {
   public:
-	constexpr key(KeyCode keycode, int modifiers) : m_keycode{keycode}, m_modifiers{modifiers}
-	{
-	}
+	constexpr key(KeyCode keycode,unsigned int modifiers) : m_keycode{keycode}, m_modifiers{(modifiers) ? modifiers : AnyModifier}
+	{}
 
-	constexpr key(std::string_view keyName, int modifiers) : key(XKeysymToKeycode(dpy(), XStringToKeysym(keyName.data())), modifiers)
+	constexpr key(std::string_view keyName,unsigned int modifiers) : key(XKeysymToKeycode(dpy(), XStringToKeysym(keyName.data())), modifiers)
 	{
 	}
 
@@ -28,8 +27,6 @@ class key
   constexpr auto keycode() const { return m_keycode; }
   constexpr int modifiers() const { return m_modifiers; }
 
-	friend class std::hash<key>;
-
 	friend bool operator==(const key &k1, const key &k2)
 	{
 		return k1.m_keycode == k2.m_keycode && k1.m_modifiers == k2.m_modifiers;
@@ -37,7 +34,7 @@ class key
 
   private:
 	KeyCode m_keycode;
-	int m_modifiers;
+	unsigned int m_modifiers;
 
 
 public: 
@@ -58,8 +55,8 @@ template <> class hash<key>
 	size_t operator()(const key &k) const
 	{
 		size_t seed{};
-		boost::hash_combine(seed, k.m_keycode);
-		boost::hash_combine(seed, k.m_modifiers);
+		boost::hash_combine(seed, k.keycode());
+		boost::hash_combine(seed, k.modifiers());
 
 		return seed;
 	}

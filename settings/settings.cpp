@@ -6,16 +6,31 @@
 #include <iostream>
 #include <keybind.h>
 #include <settings.h>
-#include <sstream>
-#include <string>
 #include <string_view>
+#include <unistd.h>
+
+template <std::size_t N>
+int execvp(const char* file, const char* const (&argv)[N])
+{
+  return execvp(file, const_cast<char* const*>(argv));
+}
+
 
 inline std::function<void()> spawn(std::string_view program_name)
 {
 	return {[=]() {
 		std::cout << "running spawn cmd\n";
-		std::string command{(std::ostringstream{} << "/bin/sh -c " << program_name).str()};
-		system(command.c_str());
+
+		const char* argument_list[] = {nullptr};
+
+  	pid_t pid { fork() };
+
+  	if(pid)
+    {
+	  	execvp(program_name.data(), argument_list);
+      std::exit(0);
+    }
+
 	}};
 }
 
@@ -28,5 +43,6 @@ void settings::initKeyBinds()
 	using enum window_t;
 
 	static keybind<wm> first{"w", Mod1Mask, spawn("google-chrome-stable")};
-  std::cout << first.keycode() << " : " << first.modifiers() << '\n';
+  /*static keybind<wm> second{"a", AnyModifier, spawn("arduino")};*/
+  /*std::cout << first.keycode() << " : " << first.modifiers() << '\n';*/
 }

@@ -40,7 +40,7 @@ class key
 public: 
 
 	// a workaround over dynamic_cast for the keybind class
-	void constexpr virtual execBindedActionIfExists() const 
+	void constexpr virtual execBindedActionIfExists(XKeyEvent& keyEv) const 
 	{
 	}
 };

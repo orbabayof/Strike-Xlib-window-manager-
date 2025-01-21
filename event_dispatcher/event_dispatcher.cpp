@@ -27,15 +27,7 @@ void frame(Window w)
 
 	std::cout << "got to the place of the grab" << '\n';
 	grabKeybinds<window_t::wm>(w);
-
-  XGrabKey(
-      dpy(),
-      XKeysymToKeycode(dpy(), XK_F4),
-      Mod1Mask,
-      w,
-      false,
-      GrabModeAsync,
-      GrabModeAsync);
+  grabKeybinds<window_t::allWindows>(w);
 
 	// for crashes and cleanup
 	XAddToSaveSet(dpy(), w);
@@ -121,12 +113,8 @@ void keyPressEvent(XEvent &ev)
 	std::cout << "running keyPress ev" << '\n';
 	XKeyEvent e{ev.xkey};
   /*std::cout << e.keycode << " : " << e.state << " <- keycode \n";*/
-	key k{static_cast<KeyCode>(e.keycode), e.state};
-  std::cout << k.keycode() << " : " << k.modifiers() << " <- keycode\n";
-  std::cout << "correct mod:" << (k.modifiers() & AnyModifier);
-	std::cout << "hash: " << std::hash<key>{}(k) << '\n';
-
-	keybind<window_t::wm>::runBindedFuncIfExists(k);
+	keybind<window_t::wm>::runBindedFuncIfExists(e);
+  keybind<window_t::allWindows>::runBindedFuncIfExists(e);
 }
 
 } // namespace event

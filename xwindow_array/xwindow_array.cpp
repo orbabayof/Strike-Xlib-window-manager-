@@ -7,6 +7,11 @@ xwindow_array::xwindow_array(Window* firstWin, unsigned int n)
   ,m_length { n }
 {}
 
+xwindow_array::xwindow_array()
+  :m_data   { nullptr }
+  ,m_length { 0       }
+{}
+
 xwindow_array::~xwindow_array()
 {
   XFree(m_data);

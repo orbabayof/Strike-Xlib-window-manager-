@@ -21,3 +21,18 @@ int listenWindowEvents(Window w)
   return XSelectInput(dpy(), w, SubstructureRedirectMask | SubstructureNotifyMask );
 }
 
+
+xwindow_array getChildWindows(Window w)
+{
+  //dummy variables are marked with _nu
+  Window root_nu  ;
+  Window perent_nu; 
+  
+  xwindow_array childs {};
+
+  XQueryTree(dpy(), w, &root_nu, &perent_nu, &childs.data(), &childs.length() );
+
+  return childs;
+
+}
+

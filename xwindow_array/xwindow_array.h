@@ -1,7 +1,11 @@
+#pragma once
+
 #include <X11/X.h>
 
 class xwindow_array {
 public:
+
+  xwindow_array();
   xwindow_array(Window* firstWin, unsigned int n);
   xwindow_array(xwindow_array &&);
   xwindow_array &operator=(xwindow_array &&);
@@ -12,6 +16,9 @@ public:
 
   Window* begin();
   Window* end();
+
+  [[nodiscard]] Window*& data(){ return m_data; }
+  [[nodiscard]] unsigned int& length() { return m_length; }
 
   //lets just make sure we don't get double dealocc for the same address
   xwindow_array(const xwindow_array &) = delete;

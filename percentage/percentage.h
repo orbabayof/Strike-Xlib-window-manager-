@@ -21,8 +21,8 @@ percentage operator""_p (unsigned long long partOfHole);
 template<typename T>
 int percentage::roundIfNeeded(T input)
 {
-  input = std::min(100, input);
-  input = std::max(0,   input);
+  input = std::min<T>(100, input);
+  input = std::max<T>(0,   input);
 
-  return input;
+  return static_cast<int>(input);
 }

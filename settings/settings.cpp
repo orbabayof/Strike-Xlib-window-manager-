@@ -1,8 +1,6 @@
 
-#include "window_manager.h"
 #include <boost/process/v1/detail/child_decl.hpp>
 #include <boost/process/v1/search_path.hpp>
-#include <ios>
 #include <keybind.h>
 #include <settings.h>
 
@@ -47,10 +45,10 @@ inline void flexibility_example(bool wantKeyBind)
   {
     static keybind<allWindows> del {"d", Mod1Mask, killWindow};
   }
-  else 
-  { 
-    static keybind<allWindows> del {"d", Mod1Mask, doNothing};
-  }
+  /*else */
+  /*{ */
+  /*  static keybind<allWindows> del {"d", Mod1Mask, doNothing};*/
+  /*}*/
 }
 
 

@@ -1,5 +1,5 @@
 BINARY=wm
-CODEDIRS=. event_dispatcher frame_manager raii_wrapper settings util window_manager error_handle keybind
+CODEDIRS=. event_dispatcher frame_manager raii_wrapper settings util window_manager error_handle keybind percentage
 INCDIRS=. .$(CODEDIRS) # can be list
 
 CC=g++

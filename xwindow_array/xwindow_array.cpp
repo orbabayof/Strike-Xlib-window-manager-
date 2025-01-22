@@ -13,13 +13,11 @@ xwindow_array::xwindow_array()
 {}
 
 xwindow_array::~xwindow_array()
-{
-  XFree(m_data);
-}
+{}
 
 Window* xwindow_array::begin()
 {
-  return m_data;
+  return m_data.get();
 }
 
 Window* xwindow_array::end()
@@ -29,29 +27,18 @@ Window* xwindow_array::end()
 
 Window& xwindow_array::operator[](unsigned int idx)
 {
-  return m_data[idx];
+  return m_data.get()[idx];
 }
 
 
 xwindow_array::xwindow_array(xwindow_array && windows)
-  : xwindow_array(windows.m_data, windows.m_length)
-{
-  windows.m_data = nullptr;
-}
+  : xwindow_array(std::move(windows.m_data).get(), windows.m_length)
+{}
 
 xwindow_array& xwindow_array::operator=(xwindow_array && windows)
 {
-  if(&windows == this)
-  {
-    return *this;
-  }
-
-  XFree(m_data);
-
-  m_data = windows.m_data;
+  m_data = std::move(windows.m_data);
   m_length = windows.m_length;
-
-  windows.m_data = nullptr;
 
   return *this;
 }

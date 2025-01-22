@@ -1,6 +1,9 @@
 #pragma once
 
 #include <X11/X.h>
+#include <memory>
+#include "../xdestroy/xdestroy.h"
+
 
 class xwindow_array {
 public:
@@ -17,7 +20,7 @@ public:
   Window* begin();
   Window* end();
 
-  [[nodiscard]] Window*& data(){ return m_data; }
+  [[nodiscard]] auto data(){ return m_data.get(); }
   [[nodiscard]] unsigned int& length() { return m_length; }
 
   //lets just make sure we don't get double dealocc for the same address
@@ -25,6 +28,7 @@ public:
   xwindow_array &operator=(const xwindow_array &) = delete;
 
 private:
-  Window* m_data;
+
+  std::unique_ptr<Window,xdestroy<Window>> m_data;
   unsigned int m_length;
 };

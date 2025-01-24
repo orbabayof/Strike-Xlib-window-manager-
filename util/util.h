@@ -11,3 +11,5 @@ extern const Window g_root;
 int listenWindowEvents(Window w);
 
 xwindow_array getChildWindows(Window w);
+
+void frameAllClients();

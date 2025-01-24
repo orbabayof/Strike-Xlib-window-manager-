@@ -20,7 +20,7 @@ public:
   Window* begin();
   Window* end();
 
-  [[nodiscard]] auto data(){ return m_data.get(); }
+  [[nodiscard]] Window* data(){ return m_data.get(); }
   [[nodiscard]] unsigned int& length() { return m_length; }
 
   //lets just make sure we don't get double dealocc for the same address

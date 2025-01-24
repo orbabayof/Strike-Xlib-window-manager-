@@ -22,13 +22,19 @@ int main(int argc, char *argv[])
   
   XSetErrorHandler(errorHandler);
 	// might want to add more redirect masks
+  frameAllClients(); 
+
 	listenWindowEvents(g_root);
+
 
   XSync(dpy(), false);
 
   settings::initKeyBinds();
   
   grabKeybinds<window_t::wm>(g_root);
+
+  std::cout << "child window count: " << getChildWindows(g_root).length() << '\n';
+  
 
 	/*event loop */
 	while (true)

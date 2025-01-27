@@ -45,10 +45,10 @@ inline void flexibility_example(bool wantKeyBind)
   {
     static keybind<allWindows> del {"d", Mod1Mask, killWindow};
   }
-  /*else */
-  /*{ */
-  /*  static keybind<allWindows> del {"d", Mod1Mask, doNothing};*/
-  /*}*/
+  else 
+  { 
+    static keybind<allWindows> del {"d", Mod1Mask, doNothing};
+  }
 }
 
 
@@ -59,5 +59,5 @@ void settings::initKeyBinds()
 	static keybind<wm> first{"w", Mod1Mask, spawn("google-chrome-stable")};
   static keybind<wm> second {"a", AnyModifier, spawn("arduino")};
 
-  /*flexibility_example(false);*/
+  flexibility_example(true);
 }

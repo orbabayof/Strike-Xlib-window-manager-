@@ -1,4 +1,6 @@
-#include <xwindow_array.h>
+#pragma once
+
+#include "../xarray/xarray.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -10,6 +12,6 @@ extern const Window g_root;
 //listens on substructure and notify 
 int listenWindowEvents(Window w);
 
-xwindow_array getChildWindows(Window w);
+xarray<Window> getChildWindows(Window w);
 
 void frameAllClients();

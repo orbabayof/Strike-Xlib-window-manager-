@@ -25,7 +25,7 @@ int listenWindowEvents(Window w)
 }
 
 
-xwindow_array getChildWindows(Window w)
+xarray<Window> getChildWindows(Window w)
 {
   //dummy variables are marked with _nu
   Window root_nu  ;

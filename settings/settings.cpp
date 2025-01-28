@@ -1,4 +1,5 @@
 
+#include "util.h"
 #include <boost/process/v1/detail/child_decl.hpp>
 #include <boost/process/v1/search_path.hpp>
 #include <keybind.h>
@@ -26,6 +27,17 @@ inline std::function<void(XKeyEvent&)> spawn(std::string_view program_name)
     
     bp::spawn(bp::search_path(program_name));
 	}};
+}
+
+void hideWin(XKeyEvent& keyEv)
+{
+  std::cout << "hiding \n";
+  hide(keyEv.subwindow);
+}
+
+void showWin(XKeyEvent& keyEv)
+{
+  show(keyEv.subwindow);
 }
 
 void doNothing(XKeyEvent& keyEv)
@@ -58,6 +70,9 @@ void settings::initKeyBinds()
 
 	static keybind<wm> first{"w", Mod1Mask, spawn("google-chrome-stable")};
   static keybind<wm> second {"a", AnyModifier, spawn("arduino")};
+
+  static keybind<wm> hide_window {"h", AnyModifier, hideWin};
+  static keybind<wm> show_window {"s", AnyModifier, showWin};
 
   flexibility_example(true);
 }

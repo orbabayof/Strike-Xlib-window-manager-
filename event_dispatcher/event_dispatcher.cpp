@@ -40,9 +40,15 @@ void mapRequest(XEvent &ev)
 
 	XMapRequestEvent e{ev.xmaprequest};
 
-	wm().frame(e.window);
+  if(wm().wasFramedByWM(e.window))
+  {
+    XMapWindow(dpy(), wm().getFrame(e.window));
+  }
+  else
+  {
+	  wm().frame(e.window);
+  }
 
-	// creates map notify
 	XMapWindow(dpy(), e.window);
 }
 
@@ -54,10 +60,9 @@ void unMapNotify(XEvent &ev)
 	// reverse mapRequest
 	if (wm().wasFramedByWM(e.window))
 	{
-
-		std::cerr << "widnow was framed \n";
-    wm().unframe(e.window);
+    XUnmapWindow(dpy(), wm().getFrame(e.window));
 	}
+
 }
 
 void keyPressEvent(XEvent &ev)
@@ -67,6 +72,14 @@ void keyPressEvent(XEvent &ev)
   /*std::cout << e.keycode << " : " << e.state << " <- keycode \n";*/
 	keybind<window_t::wm>::runBindedFuncIfExists(e);
   keybind<window_t::allWindows>::runBindedFuncIfExists(e);
+}
+
+void destroyNotifyEvent(XEvent& ev)
+{
+  XDestroyWindowEvent e { ev.xdestroywindow };
+
+  if(wm().wasFramedByWM(e.window))
+    wm().unframe(e.window);
 }
 
 } // namespace event
@@ -79,6 +92,7 @@ std::vector<void (*)(XEvent &)> initEventHand()
 	v[MapRequest] = event::mapRequest;
 	v[UnmapNotify] = event::unMapNotify;
 	v[KeyPress] = event::keyPressEvent;
+  v[DestroyNotify] = event::destroyNotifyEvent;
 
 	return v;
 }

@@ -6,4 +6,3 @@
 
 extern const std::vector<void (*)(XEvent &)> event_hand;
 
-void frame(Window w);

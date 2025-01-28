@@ -9,14 +9,14 @@ class frame_manager
 {
 public:
 
-  void storeFrameAndChild(Window frame, Window child);
+  void frame(Window w);
+
+  void unframe(Window framedWindow);
 
   bool wasFramedByWM(Window w);
 
-  //returns root window if w isn't framed
   Window getFrame(Window w);
-
-  void removeFrameAndChildFromStorage(Window reframedWindow);
+  //returns root window if w isn't framed
 
 protected:
 
@@ -26,6 +26,12 @@ private:
 
   //maps window to his frame
   std::unordered_map<Window,Window> m_frames {};
+
+
+  void storeFrameAndChild(Window frame, Window child);
+
+
+  void removeFrameAndChildFromStorage(Window reframedWindow);
 };
 
 

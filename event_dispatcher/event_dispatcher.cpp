@@ -1,6 +1,5 @@
 #include "event_dispatcher.h"
 #include "keybind.h"
-#include <functional>
 #include <keybindUtil.h>
 
 #include <settings.h>
@@ -12,53 +11,6 @@
 #include <X11/Xutil.h>
 #include <iostream>
 #include <vector>
-
-void frame(Window w)
-{
-	XWindowAttributes wa;
-	XGetWindowAttributes(dpy(), w, &wa);
-
-	// triggers CreateNotify
-	const Window frame{XCreateSimpleWindow(dpy(), g_root, wa.x, wa.y, wa.width, wa.height, settings::border_width,
-										   settings::border_color, settings::bg_color)};
-
-	// frame is not a direct child of root at this point
-	listenWindowEvents(frame);
-
-	std::cout << "got to the place of the grab" << '\n';
-	grabKeybinds<window_t::wm>(w);
-  grabKeybinds<window_t::allWindows>(w);
-
-	// for crashes and cleanup
-	XAddToSaveSet(dpy(), w);
-
-	XSync(dpy(), false);
-
-	// offset within the frame, triggers ReperentNotify
-	XReparentWindow(dpy(), w, frame, 0, 0);
-
-	XMapWindow(dpy(), frame);
-
-	wm().storeFrameAndChild(frame, w);
-
-	// TODO grub key events
-}
-
-void unframe(Window framedWindow)
-{
-	const Window frame{wm().getFrame(framedWindow)};
-
-	XUnmapWindow(dpy(), frame);
-
-	// offset window back to the root
-	XReparentWindow(dpy(), framedWindow, DefaultRootWindow(dpy()), 0, 0);
-
-	XRemoveFromSaveSet(dpy(), framedWindow);
-
-	XDestroyWindow(dpy(), frame);
-
-	wm().removeFrameAndChildFromStorage(framedWindow);
-}
 
 namespace event
 {
@@ -88,7 +40,7 @@ void mapRequest(XEvent &ev)
 
 	XMapRequestEvent e{ev.xmaprequest};
 
-	frame(e.window);
+	wm().frame(e.window);
 
 	// creates map notify
 	XMapWindow(dpy(), e.window);
@@ -104,7 +56,7 @@ void unMapNotify(XEvent &ev)
 	{
 
 		std::cerr << "widnow was framed \n";
-		unframe(e.window);
+    wm().unframe(e.window);
 	}
 }
 

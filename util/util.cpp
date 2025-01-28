@@ -1,3 +1,4 @@
+#include "window_manager.h"
 #include <X11/X.h>
 #include <algorithm>
 #include <iostream>
@@ -56,7 +57,7 @@ void frameAllClients()
       {
         std::cout << "framing" << '\n';
         XUnmapWindow(dpy(), w);
-        frame(w);
+        wm().frame(w);
         XMapWindow(dpy(), w);
       }
     }

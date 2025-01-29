@@ -33,3 +33,5 @@ private:
   
 
 };
+
+inline tiler t{};

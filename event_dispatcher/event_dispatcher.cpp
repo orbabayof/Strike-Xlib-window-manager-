@@ -1,5 +1,6 @@
 #include "event_dispatcher.h"
 #include "keybind.h"
+#include "layout.h"
 #include <keybindUtil.h>
 
 #include <settings.h>
@@ -49,6 +50,9 @@ void mapRequest(XEvent &ev)
 	  wm().frame(e.window);
   }
 
+  t.add(e.window);
+  defualt{}.order(t);
+
 	XMapWindow(dpy(), e.window);
 }
 
@@ -63,6 +67,7 @@ void unMapNotify(XEvent &ev)
     XUnmapWindow(dpy(), wm().getFrame(e.window));
 	}
 
+  t.extract(e.window);
 }
 
 void keyPressEvent(XEvent &ev)

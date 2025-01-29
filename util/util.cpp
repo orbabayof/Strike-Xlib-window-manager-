@@ -1,3 +1,4 @@
+#include "settings.h"
 #include "window_manager.h"
 #include <X11/X.h>
 #include <algorithm>
@@ -72,7 +73,7 @@ void hide(Window client)
 
 void resize(int x, int y, pixel_size ps, Window w)
 {
-	XWindowChanges window_changes{.x = x, .y = y, .width = ps.width, .height = ps.height};
-
-  XConfigureWindow(dpy(), w, CWX | CWY | CWWidth | CWHeight , &window_changes);
+  XMoveWindow(dpy(), wm().getFrame(w), x, y);
+  XResizeWindow(dpy(), wm().getFrame(w), ps.width, ps.height);
+  XResizeWindow(dpy(), w, ps.width, ps.height);
 }

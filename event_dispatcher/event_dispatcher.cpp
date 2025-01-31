@@ -51,7 +51,7 @@ void mapRequest(XEvent &ev)
   }
 
   t.add(e.window);
-  defualt{}.order(t);
+  defualtLayout().order(t);
 
 	XMapWindow(dpy(), e.window);
 }

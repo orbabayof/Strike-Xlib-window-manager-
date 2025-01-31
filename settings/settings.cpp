@@ -71,7 +71,8 @@ void settings::initKeyBinds()
 {
 	using enum window_t;
 
-	static keybind<wm> first{"c", AnyModifier, spawn("code")};
+	static keybind<wm> st_term{"k", AnyModifier, spawn("st")};
+	static keybind<wm> vs_code{"c", AnyModifier, spawn("code")};
 	static keybind<wm> second{"w", AnyModifier, spawn("google-chrome-stable")};
 
 	static keybind<wm> hide_window{"h", AnyModifier, hideWin};

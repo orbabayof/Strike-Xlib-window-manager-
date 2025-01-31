@@ -1,37 +1,32 @@
 #pragma once
 
-
 #include <X11/X.h>
 #include <X11/Xlib.h>
 
+#include <functional>
 #include <list>
 
-class tiler 
+class layout;
+
+class tiler
 {
 
-public:
+  public:
+	void add(Window w);
+	void extract(Window w);
 
+	tiler(Screen *scr);
+	tiler(int screen);
+	tiler();
 
-  void add(Window w);
-  Window extract(Window w);
+	~tiler() = default;
 
-  tiler(int screen);
-  tiler();
+	friend class layout;
 
-  ~tiler() = default;
-
-  tiler(tiler &&)                 = delete;
-  tiler(const tiler &)            = delete;
-  tiler &operator=(tiler &&)      = delete;
-  tiler &operator=(const tiler &) = delete;
-
-  friend class layout;
-private:
-
-  std::list<Window> m_win_stack {};
-  Screen* m_screen {};
-  
-
+  private:
+	std::list<Window> m_win_stack{};
+	Screen *m_screen{};
+	std::reference_wrapper<const layout> m_layout;
 };
 
 inline tiler t{};

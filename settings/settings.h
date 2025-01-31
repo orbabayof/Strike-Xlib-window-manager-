@@ -14,6 +14,8 @@ constexpr unsigned int border_width{3};
 constexpr unsigned int border_color{0xff0000};
 constexpr unsigned int bg_color{0x0000ff};
 
+constexpr int defualt_num_of_workspaces { 5 };
+
 void initKeyBinds();
 
 } // namespace settings

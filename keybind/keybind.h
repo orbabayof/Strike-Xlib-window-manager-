@@ -6,6 +6,7 @@
 
 #include <X11/Xlib.h>
 #include <functional>
+#include <iostream>
 #include <string_view>
 #include <unordered_set>
 
@@ -33,9 +34,11 @@ class keybind : public key
 	{
       
 	  key k {static_cast<KeyCode>(keyEv.keycode), keyEv.state};
+    std::cout << m_all.size() << '\n';
 		if (wasDeclared(k))
 		{
       std::reference_wrapper<key> kb { *m_all.find(k) }; 
+      std::cout << "got here! \n";
       kb.get().execBindedActionIfExists(keyEv);
 		}
 	}

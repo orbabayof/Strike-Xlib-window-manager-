@@ -1,19 +1,28 @@
 #include "util.h"
+#include <X11/Xlib.h>
+#include <layout.h>
 #include <tiler.h>
 
-tiler::tiler(int screen): m_screen { ScreenOfDisplay(dpy(), screen) }, m_win_stack {}
-{}
+tiler::tiler(Screen *screen) : m_screen{screen}, m_win_stack{}, m_layout{defualtLayout()}
+{
+}
 
-tiler::tiler(): tiler { 0 } {}
+tiler::tiler(int screen) : tiler{XScreenOfDisplay(dpy(), screen)}
+{
+}
+
+tiler::tiler() : tiler{0}
+{
+}
 
 void tiler::add(Window w)
 {
-  m_win_stack.emplace_back(w);
+	m_win_stack.emplace_back(w);
+	m_layout.get().order(*this);
 }
 
-Window tiler::extract(Window w)
+void tiler::extract(Window w)
 {
-  return m_win_stack.remove(w);
+	m_win_stack.remove(w);
+	m_layout.get().order(*this);
 }
-
-

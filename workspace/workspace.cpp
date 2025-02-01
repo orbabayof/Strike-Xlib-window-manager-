@@ -1,7 +1,11 @@
+#include "keybind.h"
 #include "util.h"
-#include <list>
+#include "window_manager.h"
+#include <keybindUtil.h>
 #include <settings.h>
 #include <workspace.h>
+
+#include <list>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -9,44 +13,60 @@
 #include <iterator>
 #include <vector>
 
-workspace::workspace(Screen *screen) : m_screen{screen}, m_tiler{m_screen}, m_workspace_root{attachWorkspaceRoot()}
+workspace::workspace(Screen *screen) : m_screen{screen}, m_tiler{screen}, m_workspace_root{attachWorkspaceRoot()}
 {
 }
 
 void workspace::add(Window w)
 {
+  bool should_map_workspace { m_tiler.empty() };
 	m_tiler.add(w);
-	XReparentWindow(dpy(), w, m_workspace_root, 0, 0);
+	XReparentWindow(dpy(), wm().getFrame(w), m_workspace_root, 0, 0);
+  if(should_map_workspace)
+  {
+    show();
+  }
 }
 
 void workspace::remove(Window w)
 {
 	m_tiler.extract(w);
+  if(m_tiler.empty())
+  {
+    hide();
+  }
 }
 
 void workspace::hide()
 {
-  //will have to check that it works
-	//XUnmapSubwindows(dpy(), m_workspace_root);
-  XUnmapWindow(dpy(), m_workspace_root);
+	XUnmapWindow(dpy(), m_workspace_root);
 }
 
 void workspace::show()
 {
-  //will have to check that it works
-	//XMapSubwindows(dpy(), m_workspace_root);
-  XMapWindow(dpy(), m_workspace_root);
+	XMapWindow(dpy(), m_workspace_root);
 }
 
 Window workspace::attachWorkspaceRoot()
 {
 	// a dummy window that will be used to acesss his child windows
-	return XCreateWindow(dpy(), g_root, 0, 0, WidthOfScreen(m_screen), HeightOfScreen(m_screen), 0, CopyFromParent,
-						 InputOutput, CopyFromParent, 0, nullptr);
+	XSetWindowAttributes wa{.override_redirect = false};
+	/*Window workspace_root{XCreateWindow(dpy(), g_root, 0, 0, WidthOfScreen(m_screen), HeightOfScreen(m_screen), 0,*/
+	/*									CopyFromParent, InputOutput, CopyFromParent, CWOverrideRedirect, &wa)};*/
+
+	// temp create a viewable window
+
+	Window workspace_root{XCreateSimpleWindow(dpy(), g_root, 0, 0, WidthOfScreen(m_screen), HeightOfScreen(m_screen),
+											  settings::border_width, settings::bg_color, settings::border_color)};
+
+	listenWindowEvents(workspace_root);
+	grabKeybinds<window_t::wm>(workspace_root);
+
+	return workspace_root;
 }
 
 workspace_manager::workspace_manager(int screen_num, std::size_t num_of_workspaces)
-	: m_screen{ScreenOfDisplay(dpy(), screen_num)}, m_curr_workspace{0}
+	: m_screen{ScreenOfDisplay(dpy(), screen_num)}, m_curr_workspace{1}
 {
 	m_workspaces.reserve(num_of_workspaces);
 
@@ -59,7 +79,7 @@ workspace &workspace_manager::workSpace(std::size_t workspace_num)
 	if (workspace_num == 0 || workspace_num > m_workspaces.size())
 		return m_workspaces[m_curr_workspace];
 
-	return m_workspaces[workspace_num + 1];
+	return m_workspaces[workspace_num - 1];
 }
 
 void workspace_manager::moveTo(std::size_t workspace_num)
@@ -83,7 +103,7 @@ void workspace_manager::remove(Window w)
 workspace_manager &screen_manager::workspaceManagerScreen(std::size_t idx)
 {
 	// a bit more complex for big O(n/2) time
-	if (idx < (m_workspaces_managers.size() / 2))
+	if (idx <= (m_workspaces_managers.size() / 2))
 	{
 		auto it{m_workspaces_managers.begin()};
 		std::advance(it, idx);
@@ -107,8 +127,8 @@ workspace_manager &screen_manager::screenNum(std::size_t num)
 	return workspaceManagerScreen(0);
 }
 
-screen_manager::screen_manager()
+void screen_manager::init()
 {
-	for (int curr_screen{0}; curr_screen < XScreenCount(dpy()); ++curr_screen)
+	for (int curr_screen{0}; curr_screen < ScreenCount(dpy()); ++curr_screen)
 		m_workspaces_managers.emplace_back(workspace_manager{curr_screen, settings::defualt_num_of_workspaces});
 }

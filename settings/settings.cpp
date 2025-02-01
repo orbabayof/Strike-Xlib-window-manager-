@@ -75,10 +75,10 @@ void settings::initKeyBinds()
 	static keybind<wm> vs_code{"c", AnyModifier, spawn("code")};
 	static keybind<wm> second{"w", AnyModifier, spawn("google-chrome-stable")};
 
-	static keybind<wm> hide_window{"h", AnyModifier, hideWin};
-	static keybind<wm> show_window{"s", AnyModifier, showWin};
+	static keybind<allWindows> hide_window{"h", AnyModifier, hideWin};
+	static keybind<allWindows> show_window{"s", AnyModifier, showWin};
 
-	static keybind<wm> ord{"o", AnyModifier, orderSelectedScr};
+	static keybind<allWindows> ord{"o", AnyModifier, orderSelectedScr};
 
 	flexibility_example(true);
 }

@@ -14,6 +14,7 @@ class tiler
   public:
 	void add(Window w);
 	void extract(Window w);
+  bool empty();
 
 	tiler(Screen *scr);
 	tiler(int screen);

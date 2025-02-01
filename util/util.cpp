@@ -77,3 +77,10 @@ void resize(int x, int y, pixel_size ps, Window w)
   XResizeWindow(dpy(), wm().getFrame(w), ps.width, ps.height);
   XResizeWindow(dpy(), w, ps.width, ps.height);
 }
+
+bool isWindowModifieble(Window w)
+{
+  XWindowAttributes wa;
+  XGetWindowAttributes(dpy(), w, &wa);
+  return wa.override_redirect;
+}

@@ -1,6 +1,7 @@
 #include "tiler.h"
 #include "util.h"
 #include <X11/X.h>
+#include <X11/Xlib.h>
 #include <list>
 #include <vector>
 
@@ -14,6 +15,8 @@ class workspace
 
 	void hide();
 	void show();
+  
+  //might add showIFEmpty
 
   private:
 	// used to config next variables
@@ -46,7 +49,9 @@ class workspace_manager
 class screen_manager
 {
   public:
-	screen_manager();
+
+	screen_manager() = default;
+  void screenInit();
 
 	workspace_manager &screenNum(std::size_t screen_num);
 
@@ -56,3 +61,11 @@ class screen_manager
 
 	workspace_manager &workspaceManagerScreen(std::size_t idx);
 };
+
+// help for the test
+
+inline workspace &getWorkSpace(int screen_num)
+{
+	static workspace w{XScreenOfDisplay(dpy(), screen_num)};
+	return w;
+}

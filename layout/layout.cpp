@@ -3,7 +3,7 @@
 #include <X11/Xlib.h>
 #include <layout.h>
 
-void defualt::order(tiler &t) const 
+void defualt::order(tiler &t) const
 {
 	auto &window_list{get_win_stack(t)};
 
@@ -46,8 +46,8 @@ void defualt::order(tiler &t) const
 	resize(next_x, next_y, currSize, *lastWin);
 }
 
-const layout& defualtLayout()
+const layout &defualtLayout()
 {
-  static defualt d {};
-  return d;
+	static defualt d{};
+	return d;
 }

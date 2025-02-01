@@ -2,6 +2,7 @@
 
 #include "../xarray/xarray.h"
 #include "layout.h"
+#include "window_manager.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -20,3 +21,13 @@ void show(Window client);
 void hide(Window client);
 
 void resize(int x, int y, pixel_size s, Window w);
+
+bool isWindowModifieble(Window w);
+
+template <typename T> void dontShowClientWhileExec(T function, Window client)
+{
+	XUnmapWindow(dpy(), wm().getFrame(client));
+	XSync(dpy(), false);
+	function();
+	XMapWindow(dpy(), wm().getFrame(client));
+}

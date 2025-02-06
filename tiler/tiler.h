@@ -14,11 +14,16 @@ class tiler
   public:
 	void add(Window w);
 	void extract(Window w);
-  bool empty();
+	bool empty();
 
 	tiler(Screen *scr);
 	tiler(int screen);
 	tiler();
+
+	const std::list<Window> data()
+	{
+		return m_win_stack;
+	}
 
 	~tiler() = default;
 

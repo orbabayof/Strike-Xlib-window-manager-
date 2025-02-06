@@ -18,10 +18,8 @@ tiler::tiler() : tiler{0}
 void tiler::add(Window w)
 {
 	m_win_stack.emplace_back(w);
+  m_layout.get().order(*this);
 
-	auto ordering{[&]() { m_layout.get().order(*this); }};
-
-	dontShowClientWhileExec(ordering, w);
 }
 
 void tiler::extract(Window w)

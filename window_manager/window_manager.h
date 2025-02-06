@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frame_manager.h>
+#include <workspace.h>
 
 class window_manager : public frame_manager
 {

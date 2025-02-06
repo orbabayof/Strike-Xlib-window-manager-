@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tiler.h"
 #include "util.h"
 #include <X11/X.h>
@@ -15,14 +17,13 @@ class workspace
 
 	void hide();
 	void show();
-  
-  //might add showIFEmpty
+
+	// might add showIFEmpty
 
   private:
 	// used to config next variables
 	Screen *m_screen{nullptr};
 
-	Window m_workspace_root{g_root};
 	tiler m_tiler{};
 
 	Window attachWorkspaceRoot();
@@ -49,9 +50,8 @@ class workspace_manager
 class screen_manager
 {
   public:
-
 	screen_manager() = default;
-  void screenInit();
+	void init();
 
 	workspace_manager &screenNum(std::size_t screen_num);
 
@@ -69,3 +69,5 @@ inline workspace &getWorkSpace(int screen_num)
 	static workspace w{XScreenOfDisplay(dpy(), screen_num)};
 	return w;
 }
+
+screen_manager &screenManager();

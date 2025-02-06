@@ -1,7 +1,7 @@
-#include "keybind.h"
 #include "util.h"
-#include "window_manager.h"
+#include <algorithm>
 #include <keybindUtil.h>
+#include <map>
 #include <settings.h>
 #include <workspace.h>
 
@@ -13,56 +13,30 @@
 #include <iterator>
 #include <vector>
 
-workspace::workspace(Screen *screen) : m_screen{screen}, m_tiler{screen}, m_workspace_root{attachWorkspaceRoot()}
+workspace::workspace(Screen *screen) : m_screen{screen}, m_tiler{screen}
 {
 }
 
 void workspace::add(Window w)
 {
-  bool should_map_workspace { m_tiler.empty() };
-	m_tiler.add(w);
-	XReparentWindow(dpy(), wm().getFrame(w), m_workspace_root, 0, 0);
-  if(should_map_workspace)
-  {
-    show();
-  }
+	if (map(w))
+		m_tiler.add(w);
 }
 
 void workspace::remove(Window w)
 {
+	unmap(w);
 	m_tiler.extract(w);
-  if(m_tiler.empty())
-  {
-    hide();
-  }
 }
 
 void workspace::hide()
 {
-	XUnmapWindow(dpy(), m_workspace_root);
+	std::ranges::for_each(m_tiler.data(), unmap);
 }
 
 void workspace::show()
 {
-	XMapWindow(dpy(), m_workspace_root);
-}
-
-Window workspace::attachWorkspaceRoot()
-{
-	// a dummy window that will be used to acesss his child windows
-	XSetWindowAttributes wa{.override_redirect = false};
-	/*Window workspace_root{XCreateWindow(dpy(), g_root, 0, 0, WidthOfScreen(m_screen), HeightOfScreen(m_screen), 0,*/
-	/*									CopyFromParent, InputOutput, CopyFromParent, CWOverrideRedirect, &wa)};*/
-
-	// temp create a viewable window
-
-	Window workspace_root{XCreateSimpleWindow(dpy(), g_root, 0, 0, WidthOfScreen(m_screen), HeightOfScreen(m_screen),
-											  settings::border_width, settings::bg_color, settings::border_color)};
-
-	listenWindowEvents(workspace_root);
-	grabKeybinds<window_t::wm>(workspace_root);
-
-	return workspace_root;
+	std::ranges::for_each(m_tiler.data(), map);
 }
 
 workspace_manager::workspace_manager(int screen_num, std::size_t num_of_workspaces)

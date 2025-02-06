@@ -2,10 +2,10 @@
 
 #include "../xarray/xarray.h"
 #include "layout.h"
-#include "window_manager.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <functional>
 
 Display *dpy();
 extern const Window g_root;
@@ -24,10 +24,8 @@ void resize(int x, int y, pixel_size s, Window w);
 
 bool isWindowModifieble(Window w);
 
-template <typename T> void dontShowClientWhileExec(T function, Window client)
-{
-	XUnmapWindow(dpy(), wm().getFrame(client));
-	XSync(dpy(), false);
-	function();
-	XMapWindow(dpy(), wm().getFrame(client));
-}
+using namespace std::placeholders; 
+
+inline const auto map { std::bind(XMapWindow, dpy(), _1) }; 
+inline const auto unmap { std::bind(XUnmapWindow, dpy(), _1) }; 
+

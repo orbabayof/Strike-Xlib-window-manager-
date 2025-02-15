@@ -1,8 +1,6 @@
-#include "util.h"
-#include <algorithm>
 #include <keybindUtil.h>
-#include <map>
 #include <settings.h>
+#include <util.h>
 #include <workspace.h>
 
 #include <list>
@@ -19,24 +17,22 @@ workspace::workspace(Screen *screen) : m_screen{screen}, m_tiler{screen}
 
 void workspace::add(Window w)
 {
-	if (map(w))
-		m_tiler.add(w);
+	m_tiler.add(w);
 }
 
 void workspace::remove(Window w)
 {
-	unmap(w);
 	m_tiler.extract(w);
 }
 
 void workspace::hide()
 {
-	std::ranges::for_each(m_tiler.data(), unmap);
+  m_tiler.unmap();
 }
 
 void workspace::show()
 {
-	std::ranges::for_each(m_tiler.data(), map);
+  m_tiler.map();
 }
 
 workspace_manager::workspace_manager(int screen_num, std::size_t num_of_workspaces)
@@ -58,10 +54,13 @@ workspace &workspace_manager::workSpace(std::size_t workspace_num)
 
 void workspace_manager::moveTo(std::size_t workspace_num)
 {
+  if(workspace_num != m_curr_workspace)
+  {
 	workSpace(m_curr_workspace).hide();
 	workSpace(workspace_num).show();
 
 	m_curr_workspace = workspace_num;
+  }
 }
 
 void workspace_manager::add(Window w)
@@ -72,6 +71,16 @@ void workspace_manager::add(Window w)
 void workspace_manager::remove(Window w)
 {
 	workSpace(m_curr_workspace).remove(w);
+}
+
+screen_manager::screen_manager() : m_curr_screen{0}
+{
+}
+
+void screen_manager::changeScreen(std::size_t next_screen)
+{
+	if (next_screen < m_workspaces_managers.size() && next_screen != 0)
+		m_curr_screen = next_screen;
 }
 
 workspace_manager &screen_manager::workspaceManagerScreen(std::size_t idx)
@@ -99,6 +108,11 @@ workspace_manager &screen_manager::screenNum(std::size_t num)
 	}
 
 	return workspaceManagerScreen(0);
+}
+
+workspace_manager &screen_manager::currScreen()
+{
+	return workspaceManagerScreen(m_curr_screen);
 }
 
 void screen_manager::init()

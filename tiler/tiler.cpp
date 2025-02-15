@@ -1,6 +1,11 @@
 #include "util.h"
+#include "window_manager.h"
+#include <X11/X.h>
 #include <X11/Xlib.h>
+#include <algorithm>
+#include <iostream>
 #include <layout.h>
+#include <util.h>
 #include <tiler.h>
 
 tiler::tiler(Screen *screen) : m_screen{screen}, m_win_stack{}, m_layout{defualtLayout()}
@@ -31,4 +36,23 @@ void tiler::extract(Window w)
 bool tiler::empty()
 {
   return m_win_stack.empty();
+}
+
+void tiler::map()
+{
+  auto map_and_rep { [&](Window w){
+    std::cout << "mapping window: " << w << '\n';
+    ::map(wm().getFrame(w));
+  }};
+  std::ranges::for_each(m_win_stack, map_and_rep);
+}
+
+void tiler::unmap()
+{
+  auto ummap_and_rep { [&](Window w){
+    std::cout << "mapping window: " << w << '\n';
+    ::unmap(wm().getFrame(w));
+  }};
+  std::ranges::for_each(m_win_stack, ummap_and_rep);
+
 }

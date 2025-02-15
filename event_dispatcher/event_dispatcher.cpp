@@ -17,8 +17,8 @@ namespace event
 {
 void configureRequest(XEvent &ev)
 {
-  //will be used for floating windows later
-  
+	// will be used for floating windows later
+	//
 	/*XConfigureRequestEvent e{ev.xconfigurerequest};*/
 	/**/
 	/*XWindowChanges change{.x = e.x,*/
@@ -54,7 +54,9 @@ void mapRequest(XEvent &ev)
 
 	/*t.add(e.window);*/
 	/*defualtLayout().order(t);*/
-	getWorkSpace(0).add(e.window);
+	/*getWorkSpace(0).add(e.window);*/
+	/*screenManager().currScreen().add(e.window);*/
+	screenManager().currScreen().add(e.window);
 
 	XMapWindow(dpy(), e.window);
 }
@@ -70,7 +72,8 @@ void unMapNotify(XEvent &ev)
 		XUnmapWindow(dpy(), wm().getFrame(e.window));
 	}
 
-  getWorkSpace(0).remove(e.window);
+	/*getWorkSpace(0).remove(e.window);*/
+	screenManager().currScreen().remove(e.window);
 }
 
 void keyPressEvent(XEvent &ev)

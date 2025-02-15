@@ -41,8 +41,10 @@ void defualt::order(tiler &t) const
 			next_y += currSize.height;
 		}
 		resize(curr_x, curr_y, currSize, *curr);
+    map(*curr);
 	}
 
+  map(*lastWin);
 	resize(next_x, next_y, currSize, *lastWin);
 }
 

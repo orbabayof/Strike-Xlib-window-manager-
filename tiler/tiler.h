@@ -15,6 +15,8 @@ class tiler
 	void add(Window w);
 	void extract(Window w);
 	bool empty();
+  void map();
+  void unmap();
 
 	tiler(Screen *scr);
 	tiler(int screen);

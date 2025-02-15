@@ -33,8 +33,10 @@ int main(int argc, char *argv[])
 
 	grabKeybinds<window_t::wm>(g_root);
 
-	getWorkSpace(0);
+	screenManager().init();
+  
 	std::cout << "child window count: " << getChildWindows(g_root).length() << '\n';
+  std::cout << "screen count: " << XScreenCount(dpy()) << '\n';
 
 	/*event loop */
 	while (true)

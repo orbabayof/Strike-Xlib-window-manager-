@@ -1,5 +1,7 @@
 #include "settings.h"
 #include "window_manager.h"
+#include "workspace.h"
+#include "xarray/xarray.h"
 #include <X11/X.h>
 #include <algorithm>
 #include <iostream>
@@ -73,14 +75,20 @@ void hide(Window client)
 
 void resize(int x, int y, pixel_size ps, Window w)
 {
-  XMoveWindow(dpy(), wm().getFrame(w), x, y);
-  XResizeWindow(dpy(), wm().getFrame(w), ps.width, ps.height);
-  XResizeWindow(dpy(), w, ps.width, ps.height);
+	XMoveResizeWindow(dpy(), wm().getFrame(w), x, y, ps.width, ps.height);
+	XResizeWindow(dpy(), w, ps.width, ps.height);
 }
 
 bool isWindowModifieble(Window w)
 {
-  XWindowAttributes wa;
-  XGetWindowAttributes(dpy(), w, &wa);
-  return wa.override_redirect;
+	XWindowAttributes wa;
+	XGetWindowAttributes(dpy(), w, &wa);
+	return wa.override_redirect;
+}
+
+
+screen_manager &screenManager()
+{
+  static screen_manager static_mgr {};
+  return static_mgr;
 }

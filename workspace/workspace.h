@@ -1,7 +1,6 @@
 #pragma once
 
 #include "tiler.h"
-#include "util.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <list>
@@ -43,6 +42,7 @@ class workspace_manager
 
   private:
 	Screen *m_screen{};
+	// indexing starts from 1
 	std::size_t m_curr_workspace{};
 	std::vector<workspace> m_workspaces{};
 };
@@ -50,24 +50,18 @@ class workspace_manager
 class screen_manager
 {
   public:
-	screen_manager() = default;
+	screen_manager();
 	void init();
 
 	workspace_manager &screenNum(std::size_t screen_num);
+	workspace_manager &currScreen();
+
+	void changeScreen(std::size_t next_screen);
 
   private:
 	// ordered by screen number
 	std::list<workspace_manager> m_workspaces_managers;
+	std::size_t m_curr_screen{};
 
 	workspace_manager &workspaceManagerScreen(std::size_t idx);
 };
-
-// help for the test
-
-inline workspace &getWorkSpace(int screen_num)
-{
-	static workspace w{XScreenOfDisplay(dpy(), screen_num)};
-	return w;
-}
-
-screen_manager &screenManager();

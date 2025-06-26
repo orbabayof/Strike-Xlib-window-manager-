@@ -1,11 +1,8 @@
-
 #include "layout.h"
 #include "tiler.h"
 #include "util.h"
 #include <algorithm>
 #include <atomUtil.h>
-#include <boost/process/v1/detail/child_decl.hpp>
-#include <boost/process/v1/search_path.hpp>
 #include <keybind.h>
 #include <settings.h>
 
@@ -19,18 +16,29 @@
 #include <string_view>
 #include <unistd.h>
 
-#include <boost/process.hpp>
 
 #include <X11/Xutil.h>
-#include <vector>
+#include <filesystem>
+
+template <typename... Arg>
+void execBin(std::string_view binName, Arg... arg)
+{
+  std::filesystem::path binary { "/usr/bin/" };
+  binary /= binName;
+
+  if(fork() == 0)
+  {
+    execl(binary.c_str(), binary.c_str(), std::forward<Arg>(arg)... ,nullptr);
+    std::_Exit(EXIT_SUCCESS);
+  }
+} 
 
 inline std::function<void(XKeyEvent &)> spawn(std::string_view program_name)
 {
 	return {[=](XKeyEvent &) {
-		namespace bp = boost::process;
 		std::cout << "running spawn cmd\n";
 
-		bp::spawn(bp::search_path(program_name));
+    execBin(program_name);
 	}};
 }
 
